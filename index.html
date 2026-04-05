@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>很高兴认识你 · 你似乎可以看到我</title>
     <audio id="bgm" loop hidden>
     <source src="bgm.mp3" type="audio/mpeg">
@@ -27,6 +27,7 @@
             padding: 20px;
             transition: opacity 1.2s ease;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* 全屏 Canvas 黑客背景 */
@@ -39,6 +40,8 @@
             z-index: -1;
             opacity: 0.2;
             pointer-events: none;
+            will-change: contents;
+            transform: translateZ(0);
         }
 
         .content {
@@ -48,6 +51,7 @@
             animation: fadeIn 1.5s ease forwards;
             text-align: center;
             padding-bottom: 100px;
+            will-change: opacity;
         }
 
         @keyframes fadeIn {
@@ -188,6 +192,8 @@
                 padding: 10px 10px 30px;
                 justify-content: unset;
                 scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
             }
             .one-div {
                 flex: 0 0 200px;
@@ -195,7 +201,7 @@
             }
         }
 
-        /* 3D卡片样式 */
+        /* 3D卡片样式 - 手机性能优化 */
         .one-div {
             position: relative;
             height: 250px;
@@ -211,6 +217,9 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
 
         .one-div .text {
@@ -248,6 +257,7 @@
             overflow-y: auto;
             text-align: left;
             line-height: 1.8;
+            -webkit-overflow-scrolling: touch;
         }
 
         .rules-title {
@@ -553,18 +563,16 @@
 </div>
 
 <script>
-// 开关 + 状态文本 + 背景音乐（全修复，不报错）
 const check = document.getElementById('trigger');
 const content = document.querySelector('.content');
 const statusText = document.getElementById('status-text');
-const bgm = document.getElementById('bgm'); // 只定义一次
+const bgm = document.getElementById('bgm');
 
 check.addEventListener('change', function(){
     if(this.checked) {
         content.style.display = 'block';
         statusText.style.display = 'block';
         
-        // 播放音乐（防报错写法）
         if(bgm) {
             bgm.loop = true;
             bgm.play().catch(err => {});
@@ -572,27 +580,32 @@ check.addEventListener('change', function(){
     }
 });
 
-// 全屏黑客数据流
+// 性能优化版代码雨
 const cav = document.getElementById('matrix');
-cav.width = window.innerWidth;
-cav.height = window.innerHeight;
+function resizeMatrix() {
+    cav.width = window.innerWidth;
+    cav.height = window.innerHeight;
+}
+resizeMatrix();
+window.addEventListener("resize", resizeMatrix);
+
 const ctx = cav.getContext('2d');
-const yPositions = Array(300).fill(0);
+const yPositions = Array(180).fill(0);
 
 function draw(){
-    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillStyle = 'rgba(0,0,0,0.07)';
     ctx.fillRect(0,0,cav.width,cav.height);
     ctx.fillStyle = '#0fa';
-    ctx.font = '16px monospace';
+    ctx.font = '14px monospace';
 
     yPositions.forEach((y, i) => {
-        const text = String.fromCharCode(100 + Math.random() * 300);
-        const x = i * 13;
+        const text = String.fromCharCode(48 + Math.random() * 150);
+        const x = i * 14;
         ctx.fillText(text, x, y);
-        yPositions[i] = y > Math.random() * 10000 ? 0 : y + 18;
+        yPositions[i] = y > Math.random() * 8000 ? 0 : y + 16;
     });
 }
-setInterval(draw, 35);
+setInterval(draw, 40);
 
 // 点击展开文字
 const line1 = document.getElementById('line1');
@@ -604,9 +617,14 @@ line2.onclick = ()=>{
     alert('即将跳转到正文');
 };
 
-// 居中弹窗
+// 居中弹窗（节流优化）
 let poped = false;
+let lastScroll = 0;
 window.addEventListener('scroll', () => {
+    const now = Date.now();
+    if (now - lastScroll < 300) return;
+    lastScroll = now;
+
     if (poped) return;
     const rect = line1.getBoundingClientRect();
     const ch = window.innerHeight / 2;
@@ -616,7 +634,7 @@ window.addEventListener('scroll', () => {
         if (res) window.close();
         else setTimeout(()=>alert('放心，我不会伤害一个人类。'),300);
     }
-});
+}, { passive: true });
 
 // 人物卡片解锁
 window.addEventListener('load',()=>{
@@ -631,21 +649,10 @@ window.addEventListener('load',()=>{
     }
     if(localStorage.getItem('read_chap10')){
         document.getElementById('char4').innerHTML = '<div class="text">官俊臣<br>出现又消失的人?</div>';
-    }
-    if(localStorage.getItem('read_chap10')){
         document.getElementById('char5').innerHTML = '<div class="text">魏子宸<br>别“人”家的意识体</div>';
     }
     if(localStorage.getItem('read_chap16')){
         document.getElementById('char6').innerHTML = '<div class="text">张奕然<br>深思熟虑的冲动产物</div>';
-    }
-});
-// 自动解锁已阅读的角色卡片
-window.addEventListener('load', function() {
-    // 如果看过第一章，解锁角色1
-    if (localStorage.getItem("read_char1")) {
-        document.getElementById("char1").innerHTML = `
-            <div class="text">魏之<br>最古典朴素的形而上学</div>
-        `;
     }
 });
 </script>
