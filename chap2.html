@@ -220,6 +220,7 @@
 // 页面加载完成后自动播放BGM
 window.addEventListener('load', function() {
     const bgm = document.getElementById('bgm');
+    bgm.volume = 0.3; // 👈 加这一行
     if(bgm) {
         bgm.loop = true;
         // 兼容浏览器自动播放策略

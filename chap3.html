@@ -227,6 +227,7 @@
 // 滚动播放BGM
 let hasPlayed = false;
 const bgm = document.getElementById('bgm');
+bgm.volume = 0.3; // 👈 加这一行
 
 window.addEventListener('scroll', function() {
     if (!hasPlayed) {

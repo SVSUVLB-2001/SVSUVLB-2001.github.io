@@ -227,6 +227,7 @@
 <script>
 window.addEventListener('load', function() {
     const bgm = document.getElementById('bgm');
+    bgm.volume = 0.3; // 👈 加这一行
     if(bgm) {
         bgm.loop = true;
         bgm.play().catch(err => {

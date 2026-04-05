@@ -462,10 +462,6 @@
             <div class="rule-item">2580、人类社交中，“闲聊” 是重要程序，即使话题无意义，也要保持回应</div>
         </div>
 
-        <!-- 互动文字 -->
-        <div class="sub-title" id="line1">你、高兴、朋友、成为</div>
-        <div class="next-line" id="line2">或许…可以听一听我的故事</div>
-
         <!-- 论坛式发帖模板区域 -->
 <div class="forum-section" style="width: 100%; max-width: 700px; margin: 70px auto 50px;">
     <h3 style="font-size: 18px; color: #eee; margin-bottom: 25px; text-align: center;">留言板</h3>
@@ -562,11 +558,22 @@
     </div>
 </div>
 
+<!-- 互动文字 已移到最底部 -->
+<div style="margin-top:80px;">
+    <div class="sub-title" id="line1">你、高兴、朋友、成为</div>
+    <div class="next-line" id="line2">或许…可以听一听我的故事</div>
+</div>
+
+</div>
+
 <script>
 const check = document.getElementById('trigger');
 const content = document.querySelector('.content');
 const statusText = document.getElementById('status-text');
 const bgm = document.getElementById('bgm');
+
+// BGM 音量调节（默认30%，可自己改 0~1）
+bgm.volume = 0.3;
 
 check.addEventListener('change', function(){
     if(this.checked) {
@@ -607,34 +614,15 @@ function draw(){
 }
 setInterval(draw, 40);
 
-// 点击展开文字
+// 点击展开文字 + 跳转 story.html
 const line1 = document.getElementById('line1');
 const line2 = document.getElementById('line2');
 line1.onclick = ()=>{
     line2.style.display = 'block';
 };
 line2.onclick = ()=>{
-    alert('即将跳转到正文');
+    window.location.href = "story.html";
 };
-
-// 居中弹窗（节流优化）
-let poped = false;
-let lastScroll = 0;
-window.addEventListener('scroll', () => {
-    const now = Date.now();
-    if (now - lastScroll < 300) return;
-    lastScroll = now;
-
-    if (poped) return;
-    const rect = line1.getBoundingClientRect();
-    const ch = window.innerHeight / 2;
-    if (rect.top <= ch + 80 && rect.bottom >= ch - 80) {
-        poped = true;
-        const res = confirm('吓到你了吗？');
-        if (res) window.close();
-        else setTimeout(()=>alert('放心，我不会伤害一个人类。'),300);
-    }
-}, { passive: true });
 
 // 人物卡片解锁
 window.addEventListener('load',()=>{
