@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意识档案 · 第3章 · 旧闻余痕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: block;
+            background: #101015;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a24, #0c0c12 100%);
+            color: #ddd;
+            font-family: "Microsoft YaHei", sans-serif;
+            padding: 20px;
+            transition: opacity 1.2s ease;
+            overflow-x: hidden;
+        }
+
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .content {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 1.5s ease forwards;
+            text-align: left;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-title {
+            font-size: 24px;
+            color: #e0e0e0;
+            margin: 40px 0 20px;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .chapter-subtitle {
+            font-size: 16px;
+            color: #888;
+            margin: 0 0 40px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .nav-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            background: #181822;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #222230;
+            border-color: #0fa;
+            color: #fff;
+        }
+
+        .article-content {
+            line-height: 2.2;
+            font-size: 18px;
+            color: #ccc;
+            margin: 40px 0;
+            text-indent: 2em;
+        }
+
+        .article-content p {
+            margin-bottom: 25px;
+        }
+
+        .highlight-text {
+            color: #0fa;
+        }
+
+        .img-center {
+            text-align:center;
+            margin:30px 0;
+        }
+        .img-center img {
+            max-width:90%;
+            height:auto;
+            border-radius:8px;
+        }
+
+        .chapter-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 60px 0 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .chapter-btn {
+            padding: 12px 22px;
+            background: #181822;
+            border: 1px solid #0fa;
+            color: #0fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            font-size: 15px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .chapter-btn:hover {
+            background: #0fa;
+            color: #101015;
+        }
+
+        #load-status {
+            font-size: 12px;
+            color: #0fa;
+            margin: 20px 0;
+            animation: blink 2s infinite;
+            text-align: center;
+        }
+
+        @keyframes blink {
+            0%,100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="matrix"></canvas>
+    <audio id="bgm" loop>
+        <source src="bgmxh.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="load-status">&gt; 章节加载中... 意识共鸣稳定</div>
+
+    <div class="content">
+        <h1 class="main-title">第 3 章 · 旧闻余痕</h1>
+        <div class="chapter-subtitle">流言藏秘，眼底皆为寻常看不见的痕迹</div>
+
+        <div class="nav-group">
+            <a href="index.html" class="nav-btn">首页</a>
+            <a href="story.html" class="nav-btn">故事目录</a>
+            <a href="past.html" class="nav-btn">过去</a>
+            <a href="rules.html" class="nav-btn">守则</a>
+        </div>
+
+        <div class="article-content">
+            <p>不知道是不是错觉，教室突然安静了下来，其实女生的声音不算大，顶多也只是二人之间能听清，魏之摸了摸鼻子，似乎有些紧张。其实意识体是没有人类情感一说的，但她是意识，她能够通过人类意识的波动感受到情绪的差异，就比如现在，她感觉到这个女生的意识波动向她传递的消息竟然是…熟稔？</p>
+
+            <p>所幸学生们发现并没有什么班主任年级组长出现在后门，前排一个男生夸张地大喊“满朝文武为何一言不发”，气氛重回嘈杂。女生看起来似乎没想得到魏之的回答，她冲着魏之的课桌抬抬下巴，语气有些神秘：“胆子还挺大，后面一排桌子你不坐偏偏坐在这儿，难道你也？”</p>
+
+            <p>这个“也”是什么意思？魏之想不明白，就听见女生继续说：“青藤有个传言，说这桌子原主还没走呢，所以没人敢坐，”她看了看周围没有人注意到她们这边，又拽着凳子望魏之的方向凑了凑，“害，都是他们瞎说的，别害怕。不过这儿原来确实有人，只不过因为桌子腿不太结实而且正好隔开柜子和窗台所以才空着，那个人我记得叫…王什么…哦对，王橹杰。”</p>
+
+            <p>“王橹杰”这个名字落进耳朵时，魏之感觉意识里拿到若即若离的频率突然剧烈的振颤了一下，像平静的水面被投进了石子。王橹杰吗…魏之默念了一遍这个名字，或许这是一个突破口，就算王橹杰并不是她想要寻找的同类，但这个人也绝对脱不了干系。 正思考着，她才注意到整个教室吵吵闹闹，却唯独她和这个女生周围没有什么嘻笑的氛围，细细琢磨甚至能感觉出来有一些微妙的排斥，魏之不太明白，毕竟前几天她刚刚得出人类很喜欢闲聊这个结论，没有再次得到验证让她第一次有一种“人类到底在想什么”的疑问。女生见她没说话也没再说什么，扭头趴在桌子上开始补觉，她没有同桌，是整个教室唯二剩出来的两个座位之一——还有一个是魏之正坐着的地方，魏之觉得似乎另有隐情，但意识体的所谓“素养”让她依旧保持缄默，只能偷偷扯开藏在桌斗里的压缩饼干袋子。</p>
+
+             <p style="text-indent:2; margin:20px 0;"><span class="highlight-text">如何成为人类守则第2582条，似乎不是所有人类都是合群的。</span></p>
+
+            <p>相安无事的度过了一个上午，魏之除了在英语课的时候不得不因为听写而暂时停下找寻的脚步而不得不打开英语书突击几篇鬼画符，剩下的时间都在学校的各个角落游荡，可寻来找去，一时之间竟找不到除了教室之外频率更清晰明显的地方，这么想着，魏之回了教室，现在是中午午休，很多学生三两成群的去食堂吃饭或者回家休息，可那个女生不知道是没睡醒还是醒着，依旧趴在桌子上肩膀规律起伏，魏之轻手轻脚走过去，女生手肘下压着的作业本险些掉在地上，魏之顺手接住，一行中规中矩的字体映入她的眼帘——姓名：张南兮。</p>
+
+            <p>这是她的名字吗，魏之想。抬起头，二人视线交汇，不知道什么时候张南兮坐了起来，似乎在加载周围的信息，定定地看着魏之手里的作业本，魏之把本子递过去，连带着一句话也送了出去：“我叫魏之，你好，张南兮。”</p>
+
+            <p>……</p>
+
+            <p>课间的喧闹揉碎在午后微凉的风里，窗外的梧桐叶晃着淡影，教室内三五成群的闲聊声此起彼伏。</p>
+
+            <p>校内公认的几个爱起哄的男同学凑在一块儿从教室后面路过，肩膀抵着肩膀，刻意压低了嗓门，那点窃窃私语却偏偏飘得不远，刚好能落进后排人的耳朵里。</p>
+
+            <p>“哎，你们还记得七班以前的事儿不？<span style="text-indent:2; margin:20px 0;"><span class="highlight-text">张南兮那事儿。</span>”“咋不记得？简直就是咱年级的风云人物！从小就传她邪乎，家里是搞那些门道的，天生能看见旁人瞅不见的东西。”</p>
+            
+            <p>“嘘小声点！人家不爱提这个…… 我记得以前上课，她总盯着那空位发呆，别人以为她走神摸鱼，谁知道她是不是在看别的玩意儿？”</p>
+            
+            <p>“难怪当初有人坐这儿的时候，她总往这边瞟，原来是早就察觉到不对劲了……”</p>
+
+            <p>几句闲话轻飘飘落下来，周遭同学只当凑热闹听个新鲜，转头就嬉笑着岔开了话题；可这些细碎的字句，一字不落地钻进了魏之的耳朵里。魏之本就比寻常存在敏锐数倍，意识里轻轻一动，就把这些流言尽数收进心底。指尖无意识摩挲着课桌边缘，方才听到 他们之间的谈论时骤然翻涌的意识频率，此刻又轻轻震颤了一下。原来不是巧合，原来这个总能察觉到异常的姑娘，从一开始就带着旁人没有的本事。</p>
+
+            <p>张南兮看起来像根本没听到一样坐在座位上捧着脸发呆，把这些闲言碎语听得清清楚楚。这种话，她从小到大听了十几年，解释过、反驳过，到最后早就懒得争辩 —— <span style="text-indent:2; margin:20px 0;"><span class="highlight-text">有些与生俱来的东西，说了别人也未必懂</span>，兴许还有人拿这件事做文章，多一事不如少一事。等那几个男生闹够了散开，周遭终于安静下来。高三的教室里只剩笔尖划过纸张的轻响，还有窗外风吹树叶的沙沙声。魏之直勾勾地盯着张南兮的侧脸，强烈的目光让张南兮实在难以忽视，只能冲魏之歪歪头：“基本上说的差不多吧。”</p>
+
+            <p>“不过其实也没他们传的那么玄乎，神神叨叨的。” 张南兮挠了挠下巴，“老一辈传下来的门道，偏老宅里的旧规矩，我天生就带了点能感知幽微的本事。也不是什么抓鬼驱邪的厉害能力，没有实打实的法术，面儿上看着跟正常孩子一样，就是偶尔能瞥见一些淡淡的虚影、莫名的气息，或是别人完全察觉不到的残留痕迹。”</p>
+
+            <p>魏之抬眼，漆黑的眼眸依旧是一贯的淡然平静，没有好奇，没有诧异，只轻轻颔首，算是回应。她话向来极少，习惯安静倾听，习惯把所有信息都默默记在意识里，等着对方继续说下去。</p>
+
+            <p>她顿了顿，目光落在魏之此刻坐着的这张课桌上，眼神软了几分，藏着几分藏了很久的疑惑：“家里长辈从小就不让我深究这些，怕我心思太细，长不大，也怕我盯着这些奇怪的东西钻牛角尖，一直都刻意瞒着、压着我的这份感知。”</p>
+
+            <p style="text-indent:2; margin:20px 0;"><span class="highlight-text">“但我骗不了自己。”</span></p>
+        </div>
+
+        <div class="chapter-buttons">
+            <a href="story.html" class="chapter-btn">返回故事目录</a>
+            <a href="chap2.html" class="chapter-btn">上一章</a>
+            <a href="#" class="chapter-btn">下一章（未完待续）</a>
+        </div>
+    </div>
+
+<script>
+// 滚动播放BGM
+let hasPlayed = false;
+const bgm = document.getElementById('bgm');
+
+window.addEventListener('scroll', function() {
+    if (!hasPlayed) {
+        bgm.play().then(() => {
+            hasPlayed = true;
+        }).catch(err => {});
+    }
+});
+
+// 加载完成
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        document.getElementById('load-status').style.display = 'none';
+    }, 2000);
+    localStorage.setItem("read_chap3", "true");
+});
+
+// 代码雨
+const cav = document.getElementById('matrix');
+cav.width = window.innerWidth;
+cav.height = window.innerHeight;
+const ctx = cav.getContext('2d');
+const yPositions = Array(300).fill(0);
+
+function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0,0,cav.width,cav.height);
+    ctx.fillStyle = '#0fa';
+    ctx.font = '16px monospace';
+    yPositions.forEach((y, i) => {
+        const text = String.fromCharCode(100 + Math.random() * 300);
+        const x = i * 13;
+        ctx.fillText(text, x, y);
+        yPositions[i] = y > Math.random() * 10000 ? 0 : y + 18;
+    });
+}
+setInterval(draw, 35);
+</script>
+</body>
+</html>

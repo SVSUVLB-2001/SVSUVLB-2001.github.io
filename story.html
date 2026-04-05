@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意识档案 · 故事</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: #101015;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a24, #0c0c12 100%);
+            color: #ddd;
+            font-family: "Microsoft YaHei", sans-serif;
+            padding: 20px;
+            transition: opacity 1.2s ease;
+            overflow-x: hidden;
+        }
+
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .content {
+            max-width: 900px;
+            width: 100%;
+            animation: fadeIn 1.5s ease forwards;
+            text-align: center;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-title {
+            font-size: 26px;
+            color: #e0e0e0;
+            margin: 40px 0;
+            font-weight: normal;
+        }
+
+        .nav-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            background: #181822;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #222230;
+            color: #fff;
+            border-color: #0fa;
+        }
+
+        /* 故事目录样式 */
+        .story-list {
+            background: #14141d;
+            border: 1px solid #2a2a38;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: left;
+        }
+
+        .story-title {
+            font-size: 22px;
+            color: #eee;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .story-item {
+            padding: 14px 20px;
+            margin: 10px 0;
+            background: #181822;
+            border-radius: 8px;
+            border-left: 3px solid #0fa;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .story-item a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 17px;
+            display: block;
+        }
+
+        .story-item:hover {
+            background: #222230;
+            padding-left: 26px;
+        }
+
+        .story-item:hover a {
+            color: #fff;
+        }
+
+        .story-desc {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* 加载状态文本 */
+        #load-status {
+            font-size: 12px;
+            color: #0fa;
+            margin: 20px 0;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%,100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="matrix"></canvas>
+    <!-- 背景音乐（自动播放） -->
+    <audio id="bgm" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 加载状态提示 -->
+    <div id="load-status">&gt; 故事档案加载中... 意识同步完成</div>
+
+    <div class="content">
+        <h1 class="main-title">意识档案 · 故事记录</h1>
+
+        <div class="nav-group">
+            <a href="index.html" class="nav-btn">首页</a>
+            <a href="story.html" class="nav-btn">故事</a>
+            <a href="past.html" class="nav-btn">过去</a>
+            <a href="rite.html" class="nav-btn">仪式</a>
+            <a href="create.html" class="nav-btn">创造</a>
+            <a href="faith.html" class="nav-btn">信仰</a>
+            <a href="unknown.html" class="nav-btn">UNKNOWN</a>
+            <a href="rules.html" class="nav-btn">守则</a>
+        </div>
+
+        <!-- 文章索引（故事目录） -->
+        <div class="story-list">
+            <div class="story-title">故事目录 · 未知的旅途</div>
+
+            <div class="story-item">
+                <a href="chap1.html">第 1 章 · 祂的过去</a>
+                <div class="story-desc">意志在绝望中凝结，信仰于废墟之上屹立</div>
+            </div>
+            <div class="story-item">
+                <a href="chap2.html">第 2 章 · 我要找到你</a>
+                <div class="story-desc">找寻同类频率，偶然搭话的人是敌是友</div>
+            </div>
+            <div class="story-item">
+                <a href="chap3.html">第 3 章 · 高三（7）班的秘密</a>
+                <div class="story-desc">也许注意事项需要再更新了。</div>
+            </div>
+            <div class="story-item">
+                <a href="chap4.html">什么叫出现又消失</a>
+                <div class="story-desc">学校中出现其他意识体？</div>
+            </div>
+            <div class="story-item">
+                <a href="chap5.html">？</a>
+                <div class="story-desc">？</div>
+            </div>
+            <div class="story-item">
+                <a href="chap6.html">？</a>
+                <div class="story-desc">？</div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// 页面加载完成后自动播放BGM
+window.addEventListener('load', function() {
+    const bgm = document.getElementById('bgm');
+    if(bgm) {
+        bgm.loop = true;
+        // 兼容浏览器自动播放策略
+        bgm.play().catch(err => {
+            // 若浏览器阻止自动播放，添加用户交互触发
+            document.body.addEventListener('click', function playBgm() {
+                bgm.play();
+                document.body.removeEventListener('click', playBgm);
+            }, { once: true });
+        });
+    }
+
+    // 3秒后隐藏加载状态
+    setTimeout(() => {
+        document.getElementById('load-status').style.display = 'none';
+    }, 3000);
+});
+
+// 黑客数据流背景
+const cav = document.getElementById('matrix');
+cav.width = window.innerWidth;
+cav.height = window.innerHeight;
+const ctx = cav.getContext('2d');
+const yPositions = Array(300).fill(0);
+
+function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0,0,cav.width,cav.height);
+    ctx.fillStyle = '#0fa';
+    ctx.font = '16px monospace';
+    yPositions.forEach((y, i) => {
+        const text = String.fromCharCode(100 + Math.random() * 300);
+        const x = i * 13;
+        ctx.fillText(text, x, y);
+        yPositions[i] = y > Math.random() * 10000 ? 0 : y + 18;
+    });
+}
+setInterval(draw, 35);
+</script>
+</body>
+</html>

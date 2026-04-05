@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意识档案 · 第2章 · 我要找到你</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: #101015;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a24, #0c0c12 100%);
+            color: #ddd;
+            font-family: "Microsoft YaHei", sans-serif;
+            padding: 20px;
+            transition: opacity 1.2s ease;
+            overflow-x: hidden;
+        }
+
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .content {
+            max-width: 800px;
+            width: 100%;
+            animation: fadeIn 1.5s ease forwards;
+            text-align: left;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .main-title {
+            font-size: 24px;
+            color: #e0e0e0;
+            margin: 40px 0 20px;
+            font-weight: normal;
+            text-align: center;
+        }
+
+        .chapter-subtitle {
+            font-size: 16px;
+            color: #888;
+            margin: 0 0 40px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .nav-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            background: #181022;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #222230;
+            border-color: #0fa;
+            color: #fff;
+        }
+
+        .article-content {
+            line-height: 2.2;
+            font-size: 18px;
+            color: #ccc;
+            margin: 40px 0;
+            text-indent: 2em;
+        }
+
+        .article-content p {
+            margin-bottom: 25px;
+        }
+
+        .highlight-text {
+            color: #0fa;
+        }
+
+        /* 章节按钮组 */
+        .chapter-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 60px 0 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .chapter-btn {
+            padding: 12px 22px;
+            background: #181022;
+            border: 1px solid #0fa;
+            color: #0fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            font-size: 15px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .chapter-btn:hover {
+            background: #0fa;
+            color: #101015;
+        }
+
+        #load-status {
+            font-size: 12px;
+            color: #0fa;
+            margin: 20px 0;
+            animation: blink 2s infinite;
+            text-align: center;
+        }
+
+        @keyframes blink {
+            0%,100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="matrix"></canvas>
+    <audio id="bgm" loop>
+        <source src="bgm2.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="load-status">&gt; 章节加载中... 意识共鸣稳定</div>
+
+    <div class="content">
+        <h1 class="main-title">第 2 章 · 我要找到你</h1>
+        <div class="chapter-subtitle">找寻同类频率，偶然搭话的人是敌是友</div>
+
+        <div class="nav-group">
+            <a href="index.html" class="nav-btn">首页</a>
+            <a href="story.html" class="nav-btn">故事目录</a>
+            <a href="past.html" class="nav-btn">过去</a>
+            <a href="rules.html" class="nav-btn">守则</a>
+        </div>
+
+        <!-- 第二章正文 -->
+        <div class="article-content">
+             
+            <!-- 👇 在这里插入图片 👇 -->
+<p style="text-align:center; margin:30px 0;">
+  <img src="school.jpg" 
+       style="max-width:90%; height:auto; border-radius:8px;" 
+       alt="场景插图">
+</p>
+
+            <p>七点十分，周一。今天的天气算不上好，明明不是梅雨季节气压却低的要命，魏之打着一把黑色点缀着暗红色的伞走在前往青藤中学的路上，路途不太远，十分钟后魏之踩着铃声和门卫关门的前一刻走进了青藤。天空灰蒙蒙的，落到校门口 “青藤中学” 的牌子上，雨丝打湿了牌子上的藤蔓浮雕，她站在学校的校训墙面前停下四周看了看，在忙碌穿行的学生之间显得有点格格不入；一阵风吹过来，魏之似乎被雨丝吹湿了头发，她抬脚，轻车熟路地朝着左手边的高中主教楼走去，走着走着，无意识地抬手把额前碎发别到耳后，这个小动作和不远处抱着作业本、同样低着头的女生如出一辙——</p>
+
+            <p>其实这是魏之第五次来到这里了，前四次她都只是以意识体的形态掠过，像一阵没有重量的风，贴在教学楼的窗沿、走廊的转角、教室后门的缝隙里，安静地扫描整座青藤中学。她不需要睡眠，不需要休息，只需要捕捉同类的频率—— 那种和自己同源、由强烈执念凝聚而成的意识波动。</p>
+
+            <p>整座学校里，信号最密集、最稳定的地方，是高三（7）班。不是喧闹的前排，不是热闹的中间，而是教室左后方靠窗的那个角落：那里的桌椅常年半旧，桌面有浅浅的划痕，窗帘被风掀起时，会漏进一点点灰蓝色的天光。魏之在意识里反复比对过：那里的频率最干净、最持久，像一根埋在尘埃里的线，轻轻牵着她，一次又一次把她引向这里。而要真正走进这间教室，她必须拥有一个不会被怀疑的模样。</p>
+
+            <!-- 👇 在这里插入图片 👇 -->
+<p style="text-align:center; margin:30px 0;">
+  <img src="desk.jpg" 
+       style="max-width:90%; height:auto; border-radius:8px;" 
+       alt="场景插图">
+</p>
+
+            <p>她在人群里观察了很久，最终锁定了一个身影。那是个总是低着头、抱着作业本快步走的女生，眉眼普通，发型普通，连校服都洗得有些发白，走在人群里像一滴融进雨里的水，存在感低到几乎可以被忽略。魏之不需要伪装，不需要模仿得一模一样，她只是轻轻贴合对方的轮廓 ——</p>
+
+            <p>身高、肩宽、刘海的弧度、低头时微微含着的肩线、甚至是下意识别碎发的小动作。她没有夺走谁的身份，没有占据谁的人生，只是借了一份 “不起眼”，为自己凝出一具可以行走、可以坐下、可以被看见、却又不会被记住的躯体。</p>
+
+            <p>这是属于意识体的温柔：不侵占，不破坏，只借一抹人间的轮廓，让自己能站在阳光里，像个真正的少女；载体已经成型，这一次，她不再是风，不再是幻影。魏之收起伞，水珠顺着伞尖滴落在地砖上，碎成一小片透明的痕迹。她上了三楼，站在 7 班门口，回忆起十几年前学来的 “人类技能”—— 轻轻深呼吸两次，推门走进了教室。</p>
+
+            <p>青藤中学的高三一共十个班，在当地不算规模极大的学校，加之校方一视同仁，并没有所谓火箭班与普通班的区别。教室因她的闯入，短暂安静了半秒。几道目光轻飘飘落在魏之身上，她莫名生出一丝拘谨，险些同手同脚。可那些目光也只是停留一瞬，有人随口跟她打了个招呼，便又重新扎进方才的话题里 —— 昨天的比赛、今天的排课、早读要背的课文。魏之径直走到教室左后方坐了下来，坐在前面的女生转头和她道了声“早啊，你今天换了个发型？挺好看的”，她才发现自己无意识模仿的那个女生，原来平时是扎马尾的 —— 而她现在是披发。</p>
+
+            <p>她没说话，只是轻轻点头，扯出一个很浅的笑，在她的认知里，这已经足够礼貌。雨伞被她放在阳台边，桌肚里只有一包压缩饼干和一瓶水。魏之抬眼，正想观察周围的人都在做什么，盘算着自己要不要也装出一副忙碌的样子 ——</p>
+
+            <p>一道清晰、平静、不带任何恶意，却又无比笃定的声音，从斜前方传来：</p>
+
+            <p>“你不是我们班的吧。”</p>
+            <p>“…… 啊？”</p>
+        </div>
+
+        <!-- 底部按钮：返回导航 + 上一章 + 下一章 -->
+        <div class="chapter-buttons">
+            <a href="story.html" class="chapter-btn">返回故事目录</a>
+            <a href="chap1.html" class="chapter-btn">上一章</a>
+            <a href="chap3.html" class="chapter-btn">下一章</a>
+        </div>
+    </div>
+
+<script>
+// 页面加载完成后自动播放BGM
+window.addEventListener('load', function() {
+    const bgm = document.getElementById('bgm');
+    if(bgm) {
+        bgm.loop = true;
+        // 兼容浏览器自动播放策略
+        bgm.play().catch(err => {
+            // 若浏览器阻止自动播放，添加用户交互触发
+            document.body.addEventListener('click', function playBgm() {
+                bgm.play();
+                document.body.removeEventListener('click', playBgm);
+            }, { once: true });
+        });
+    }
+
+    // 3秒后隐藏加载状态
+    setTimeout(() => {
+        document.getElementById('load-status').style.display = 'none';
+    }, 3000);
+});
+
+// 代码雨
+const cav = document.getElementById('matrix');
+cav.width = window.innerWidth;
+cav.height = window.innerHeight;
+const ctx = cav.getContext('2d');
+const yPositions = Array(300).fill(0);
+
+function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0,0,cav.width,cav.height);
+    ctx.fillStyle = '#0fa';
+    ctx.font = '16px monospace';
+    yPositions.forEach((y, i) => {
+        const text = String.fromCharCode(100 + Math.random() * 300);
+        const x = i * 13;
+        ctx.fillText(text, x, y);
+        yPositions[i] = y > Math.random() * 10000 ? 0 : y + 18;
+    });
+}
+setInterval(draw, 35);
+</script>
+</body>
+</html>

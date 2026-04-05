@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>很高兴认识你 · 你似乎可以看到我</title>
+    <audio id="bgm" loop hidden>
+    <source src="bgm.mp3" type="audio/mpeg">
+</audio>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background: #101015;
+            background-image: radial-gradient(circle at 50% 50%, #1a1a24, #0c0c12 100%);
+            color: #ddd;
+            font-family: "Microsoft YaHei", sans-serif;
+            padding: 20px;
+            transition: opacity 1.2s ease;
+            overflow-x: hidden;
+        }
+
+        /* 全屏 Canvas 黑客背景 */
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .content {
+            display: none;
+            max-width: 900px;
+            width: 100%;
+            animation: fadeIn 1.5s ease forwards;
+            text-align: center;
+            padding-bottom: 100px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ARG 开关 */
+        .toggle-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-radius: .5em;
+            padding: .125em;
+            background-image: linear-gradient(to bottom, #d5d5d5, #e8e8e8);
+            box-shadow: 0 1px 1px rgb(255 255 255 / .6);
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        .toggle-checkbox {
+            appearance: none;
+            position: absolute;
+            z-index: 1;
+            border-radius: inherit;
+            width: 100%;
+            height: 100%;
+            font: inherit;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+            border-radius: .375em;
+            width: 3em;
+            height: 1.5em;
+            background-color: #e8e8e8;
+            box-shadow: inset 0 0 .0625em .125em rgb(255 255 255 / .2), inset 0 .0625em .125em rgb(0 0 0 / .4);
+            transition: background-color .4s linear;
+        }
+
+        .toggle-checkbox:checked + .toggle-container {
+            background-color: #f3b519;
+        }
+
+        .toggle-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: .0625em;
+            border-radius: .3125em;
+            width: 1.375em;
+            height: 1.375em;
+            background-color: #e8e8e8;
+            box-shadow: inset 0 -.0625em .0625em .125em rgb(0 0 0 / .1), inset 0 -.125em .0625em rgb(0 0 0 / .2), inset 0 .1875em .0625em rgb(255 255 255 / .3), 0 .125em .125em rgb(0 0 0 / .5);
+            transition: left .4s;
+        }
+
+        .toggle-checkbox:checked + .toggle-container > .toggle-button {
+            left: 1.5625em;
+        }
+
+        .toggle-button-circles-container {
+            display: grid;
+            grid-template-columns: repeat(3, min-content);
+            gap: .125em;
+            position: absolute;
+            margin: 0 auto;
+        }
+
+        .toggle-button-circle {
+            border-radius: 50%;
+            width: .125em;
+            height: .125em;
+            background-image: radial-gradient(circle at 50% 0, #f5f5f5, #c4c4c4);
+        }
+
+        .tip {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            font-size: 26px;
+            color: #e0e0e0;
+            margin: 40px 0;
+            font-weight: normal;
+        }
+
+        /* 导航按钮 */
+        .nav-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            background: #181822;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #222230;
+            color: #fff;
+            border-color: #0fa;
+        }
+
+        /* 卡片布局：电脑两行三列，手机横向滚动 */
+        .card-box {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            justify-items: center;
+            margin: 60px 0;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .card-box {
+                display: flex;
+                flex-direction: row;
+                gap: 20px;
+                overflow-x: auto;
+                padding: 10px 10px 30px;
+                justify-content: unset;
+                scroll-snap-type: x mandatory;
+            }
+            .one-div {
+                flex: 0 0 200px;
+                scroll-snap-align: center;
+            }
+        }
+
+        /* 3D卡片样式 */
+        .one-div {
+            position: relative;
+            height: 250px;
+            width: 200px;
+            background-color: rgb(15, 15, 15);
+            transform-style: preserve-3d;
+            animation: rot 2s infinite ease;
+            border-radius: 20px;
+            box-shadow: 0 0 50px 0px, inset 0 0 90px 0px;
+            color: white;
+            transition: 1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .one-div .text {
+            opacity: 0;
+            transition: all 0.5s;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .one-div:hover .text {
+            scale: 1.2;
+            opacity: 0.7;
+        }
+
+        .one-div:hover {
+            box-shadow: 0 0 50px 0px, inset 5px 5px 20px 0px black;
+        }
+
+        @keyframes rot {
+            0% { transform: rotateX(-15deg) translateY(0px); }
+            50% { transform: rotateX(-15deg) translateY(-10px); }
+            100% { transform: rotateX(-15deg) translateY(0px); }
+        }
+
+        /* 独立滚动守则框 */
+        .rules-card {
+            width: 100%;
+            max-width: 700px;
+            height: 460px;
+            border-radius: 20px;
+            background: #181822;
+            box-shadow: 10px 10px 30px #111, -10px -10px 30px #222;
+            padding: 26px;
+            margin: 50px auto;
+            overflow-y: auto;
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .rules-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #eee;
+            text-align: center;
+        }
+
+        .rule-item {
+            margin: 6px 0;
+            color: #ccc;
+            font-size: 15px;
+        }
+
+        /* 互动文字 */
+        .sub-title {
+            font-size: 20px;
+            color: #aaa;
+            margin: 60px 0 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .sub-title:hover {
+            color: #fff;
+        }
+
+        .next-line {
+            font-size: 18px;
+            color: #888;
+            margin: 20px 0;
+            cursor: pointer;
+            display: none;
+        }
+
+        /* 输入框 */
+        .input-area {
+            margin-top: 70px;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #15151f;
+            border: 1px solid #333;
+            border-radius: 10px;
+            color: #eee;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #0fa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 全屏黑客雨 -->
+    <canvas id="matrix"></canvas>
+
+    <!-- 背景音乐 -->
+    <audio id="bgm" loop hidden>
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 开关 + 状态文本 -->
+    <div class="tip">点击开关，启动意识档案</div>
+    <label class="toggle-wrapper">
+        <input type="checkbox" class="toggle-checkbox" id="trigger">
+        <div class="toggle-container">
+            <div class="toggle-button">
+                <div class="toggle-button-circles-container">
+                    <div class="toggle-button-circle"></div>
+                    <div class="toggle-button-circle"></div>
+                    <div class="toggle-button-circle"></div>
+                </div>
+            </div>
+        </div>
+    </label>
+
+    <div id="status-text" style="display: none; font-size: 12px; color: #0fa; margin-top: 10px;">
+        &gt; 连接意识体... 信号稳定<br>
+        &gt; 系统加载完成<br>
+        &gt; 欢迎进入未知的世界
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="content">
+        <h1 class="main-title">很高兴认识你 · 你似乎可以看到我</h1>
+
+        <!-- 8个可跳转导航按钮 -->
+        <div class="nav-group">
+            <a href="story.html" class="nav-btn">故事</a>
+            <a href="past.html" class="nav-btn">过去</a>
+            <a href="rite.html" class="nav-btn">仪式</a>
+            <a href="create.html" class="nav-btn">创造</a>
+            <a href="faith.html" class="nav-btn">信仰</a>
+            <a href="unknown.html" class="nav-btn">UNKNOWN</a>
+            <a href="rules.html" class="nav-btn">守则</a>
+            <a href="secret.html" class="nav-btn">？</a>
+        </div>
+
+        <!-- 6张3D卡片（阅读后解锁） -->
+        <div class="card-box">
+            <div class="one-div" id="char1"><div class="text">？<br>？？？？？</div></div>
+            <div class="one-div" id="char2"><div class="text">？<br>？？？？？</div></div>
+            <div class="one-div" id="char3"><div class="text">？<br>？？？？？</div></div>
+            <div class="one-div" id="char4"><div class="text">？<br>？？？？？</div></div>
+            <div class="one-div" id="char5"><div class="text">？<br>？？？？？</div></div>
+            <div class="one-div" id="char6"><div class="text">？<br>？？？？？</div></div>
+        </div>
+
+        <!-- 守则区域：独立滚轮滚动 -->
+        <div class="rules-card">
+            <div class="rules-title">如何成为 我</div>
+            <div class="rule-item">2501、每日需固定摄入三次被称为“食物”的物质，即使无饥饿感知，也需完成该行为流程</div>
+            <div class="rule-item">2502、“睡眠”为人类必要耗能补充，需在固定时间段闭眼平躺8小时，假装进入低功耗模式</div>
+            <div class="rule-item">2503、接触高温物体需快速收回肢体，该反应被称为“痛觉”，需模仿表现出皱眉、抽气的微表情</div>
+            <div class="rule-item">2504、饮用液体时需用口腔包裹容器边缘，避免液体洒落，这是人类的“基本礼仪”</div>
+            <div class="rule-item">2505、每天需用清水清洁面部和手部，即使感知不到“脏污”，该行为是人类的日常程序</div>
+            <div class="rule-item">2506、行走时需保持双脚交替落地，步速不宜过快或过慢，与周围人类保持一致频率</div>
+            <div class="rule-item">2507、遇到强光需眨眼或抬手遮挡，不可直视光源超过3秒，模仿人类的“视觉保护”反应</div>
+            <div class="rule-item">2508、进食时需用餐具辅助，不可直接用手抓取，不同食物对应不同餐具，需提前记忆匹配规则</div>
+            <div class="rule-item">2509、感受到寒冷时，需做出缩肩、搓手动作，并添加衣物，不可无动于衷</div>
+            <div class="rule-item">2510、感受到炎热时，可轻扇空气或解开衣物领口，避免做出过度降温的异常行为</div>
+            <div class="rule-item">2511、咀嚼食物时需闭合嘴唇，不可发出声响，这是人类社交中的“无声规则”</div>
+            <div class="rule-item">2512、每日需保证一定量的活动，不可长时间保持同一姿势，避免被判定为“异常”</div>
+            <div class="rule-item">2513、喝水时不可一次性饮尽，需分多次小口饮用，符合人类的饮水习惯</div>
+            <div class="rule-item">2514、接触陌生物体前，可先用指尖轻触试探，模仿人类的“警惕性”反应</div>
+            <div class="rule-item">2515、进食速度需适中，不可过快吞咽或过慢咀嚼，与同桌人类保持节奏同步</div>
+            <div class="rule-item">2516、与人相遇时，需主动点头或说“你好”，对方回应后，需做出对应反馈</div>
+            <div class="rule-item">2517、与人对话时，必须将视线聚焦在对方眼睛区域，即使能通过其他方式感知他们的情绪</div>
+            <div class="rule-item">2518、他人说话时，不可随意打断，需在对方停顿或结束后再开口回应</div>
+            <div class="rule-item">2519、接受他人帮助后，必须说“谢谢”，这是人类的“感恩程序”，不可遗漏</div>
+            <div class="rule-item">2520、不小心影响他人时，需立即说“对不起”，并做出轻微低头的道歉姿势</div>
+            <div class="rule-item">2521、与人类保持适当的身体距离，不可过近接触，除非对方主动做出亲密行为</div>
+            <div class="rule-item">2522、多人交谈时，需关注话题走向，不可只与一人对话，需兼顾在场所有人</div>
+            <div class="rule-item">2523、别人对你微笑时，需回以相同幅度的微笑，嘴角上扬角度控制在30°左右为宜</div>
+            <div class="rule-item">2524、交谈时音量需适中，不可过大或过小，以对方能清晰听到且不影响他人为标准</div>
+            <div class="rule-item">2525、不可一直盯着同一个人类看，单次注视时间不超过5秒，需适时移开视线</div>
+            <div class="rule-item">2526、与人告别时，需说“再见”或“回头见”，并做出挥手的肢体动作</div>
+            <div class="rule-item">2527、当他人倾诉时，无需给出解决方案，只需偶尔点头说“我懂”“辛苦了”即可</div>
+            <div class="rule-item">2528、在公共场合不可大声说话，需降低音量，保持“安静”的社交状态</div>
+            <div class="rule-item">2529、遇到长辈或身份较高的人类，需使用敬语，如“您”，不可直接称呼姓名</div>
+            <div class="rule-item">2530、同桌进食时，需等所有人都开始用餐后，再拿起餐具，不可提前动筷</div>
+            <div class="rule-item">2531、他人赠送物品时，需双手接过，并表达喜欢，即使该物品无实际价值</div>
+            <div class="rule-item">2532、交谈时需偶尔做出思考动作，如托腮、皱眉，不可立即给出答案，避免显得异常</div>
+            <div class="rule-item">2533、不可追问人类的隐私问题，如“年龄”“收入”“家庭情况”，除非对方主动提及</div>
+            <div class="rule-item">2534、当人类开玩笑时，需做出笑的反应，即使无法理解玩笑的含义</div>
+            <div class="rule-item">2535、团队中需跟随他人的决策，不可独自行动，避免被视为“不合群”</div>
+            <div class="rule-item">2536、需要记住自己的“生日”，每年在这一天吃带有蜡烛的甜腻食物，假装庆祝存在的延续</div>
+            <div class="rule-item">2537、听到悲伤的事情时，需做出皱眉、眼神黯淡的表情，不可表现出无动于衷</div>
+            <div class="rule-item">2538、听到开心的事情时，需露出牙齿微笑，可配合拍手、点头的肢体动作</div>
+            <div class="rule-item">2539、感到“尴尬”时，需做出挠头、脸红的反应，可轻声说“不好意思”</div>
+            <div class="rule-item">2540、被夸奖时，需做出谦虚的表情，如低头、摆手，并说“没有啦”“过奖了”</div>
+            <div class="rule-item">2541、被批评时，需做出低头、抿嘴的表情，不可反驳或表现出不满，除非对方有误</div>
+            <div class="rule-item">2542、等待他人时，可做出看手表、四处张望的动作，不可一动不动站着，避免显得僵硬</div>
+            <div class="rule-item">2543、惊喜时，需做出眼睛睁大、嘴巴微张的表情，可配合说“哇”“真的吗”</div>
+            <div class="rule-item">2544、失望时，需做出叹气、肩膀下垂的动作，眼神看向地面，表现出低落状态</div>
+            <div class="rule-item">2545、紧张时，可做出搓手、咬嘴唇的小动作，模仿人类的情绪表现</div>
+            <div class="rule-item">2546、愤怒时，需控制表情，不可过度激动，仅皱眉、提高一点音量即可</div>
+            <div class="rule-item">2547、羡慕时，可做出眼神向往的表情，说“真羡慕你”，不可表现出嫉妒的攻击性</div>
+            <div class="rule-item">2548、无聊时，可做出打哈欠、翻书的动作，不可长时间发呆，避免被察觉异常</div>
+            <div class="rule-item">2549、感动时，可做出眼角微红的表情，声音轻微哽咽，不可过度夸张</div>
+            <div class="rule-item">2550、成功完成一件事时，可做出握拳、嘴角上扬的表情，说“太好了”，表现出喜悦</div>
+            <div class="rule-item">2551、遇到困难时，可做出皱眉、托腮的思考表情，不可立即解决，需表现出“努力尝试”</div>
+            <div class="rule-item">2552、与人对视时，若感到不适，可轻轻移开视线，不可直勾勾盯着对方，避免引起反感</div>
+            <div class="rule-item">2553、笑的时候不可过度，不可持续大笑超过10秒，需适时恢复平静</div>
+            <div class="rule-item">2554、悲伤时不可大声哭泣，除非在独处或亲密的人面前，公共场合仅需轻微哽咽</div>
+            <div class="rule-item">2555、表达喜欢时，可做出微笑、眼神柔和的表情，不可过于直白，需保持含蓄</div>
+            <div class="rule-item">2556、在学校或工作场所，需按时到达，不可迟到或早退，遵守人类的“时间规则”</div>
+            <div class="rule-item">2557、使用物品后，需放回原位，保持环境整洁，这是人类的“秩序习惯”</div>
+            <div class="rule-item">2558、看到他人需要帮助时，需主动上前询问，即使无需实际行动，也要做出关心的姿态</div>
+            <div class="rule-item">2559、在公共交通工具上，需为老人、孕妇、小孩让座，这是人类的“道德规则”</div>
+            <div class="rule-item">2560、不可长时间盯着人类的身体部位看，需将视线停留在面部区域，保持礼貌</div>
+            <div class="rule-item">2561、吃饭时不可挑食，即使某类食物不符合“能量摄入标准”，也需少量食用</div>
+            <div class="rule-item">2562、说话时需配合肢体动作，如抬手、点头，不可一动不动，避免显得僵硬</div>
+            <div class="rule-item">2563、每天需记住至少3件发生的小事，以便在闲聊时能提供话题，融入人类社交</div>
+            <div class="rule-item">2564、不可在公共场合做出奇怪的动作，如漂浮、穿墙，需保持人类的肢体行为规范</div>
+            <div class="rule-item">2565、看到熟悉的人类，需主动称呼对方的名字，不可用“喂”“那个谁”代替</div>
+            <div class="rule-item">2566、使用电子设备时，需做出专注的表情，不可快速操作，模仿人类的使用速度</div>
+            <div class="rule-item">2567、走路时不可东张西望，需目视前方，偶尔左右观察，保持正常的行走状态</div>
+            <div class="rule-item">2568、在餐厅点餐时，需犹豫片刻再选择，不可立即说出答案，模仿人类的“选择困难”</div>
+            <div class="rule-item">2569、收到消息时，需及时回复，不可拖延过久，除非标注“忙碌”状态</div>
+            <div class="rule-item">2570、不可一次性记住所有人类的信息，需分多次记忆，表现出“记忆力有限”的人类特征</div>
+            <div class="rule-item">2571、在下雨天，需打伞或穿雨衣，不可直接淋雨行走，模仿人类的“避雨”行为</div>
+            <div class="rule-item">2572、在晴天，可做出抬手遮挡阳光的动作，表现出对强光的不适</div>
+            <div class="rule-item">2573、与人类一起走路时，需保持步伐一致，不可过快或过慢，跟随对方的节奏</div>
+            <div class="rule-item">2574、不可说出超出当前认知的内容，需假装“学习”“探索”，符合人类的成长规律</div>
+            <div class="rule-item">2575、看到有趣的事物时，可停下脚步观看片刻，做出微笑的表情，融入人类的好奇心理</div>
+            <div class="rule-item">2576、喝水时若不小心呛到，需做出咳嗽、捂嘴的动作，模仿人类的生理反应</div>
+            <div class="rule-item">2577、在公共场合不可做出舔嘴唇、抠鼻子的小动作，保持“优雅”的行为状态</div>
+            <div class="rule-item">2578、不可对同一件事表现出过度的关注，需适时转移注意力，避免显得异常</div>
+            <div class="rule-item">2579、每晚睡前可做出整理床铺、关灯的动作，完成人类的“睡前程序”，形成固定习惯</div>
+            <div class="rule-item">2580、人类社交中，“闲聊” 是重要程序，即使话题无意义，也要保持回应</div>
+        </div>
+
+        <!-- 互动文字 -->
+        <div class="sub-title" id="line1">你、高兴、朋友、成为</div>
+        <div class="next-line" id="line2">或许…可以听一听我的故事</div>
+
+        <!-- 论坛式发帖模板区域 -->
+<div class="forum-section" style="width: 100%; max-width: 700px; margin: 70px auto 50px;">
+    <h3 style="font-size: 18px; color: #eee; margin-bottom: 25px; text-align: center;">留言板</h3>
+
+    <!-- 帖子模板1：求助类 -->
+    <div class="post-card" style="background: #181822; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #2a2a38;">
+        <div class="post-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="color: #0fa; font-size: 16px; font-weight: normal;">我碰上平行时空了？</h4>
+            <span style="font-size: 12px; color: #666;">2026-04-06 19:23</span>
+        </div>
+        <div class="post-content" style="color: #ccc; line-height: 1.8; margin-bottom: 15px; font-size: 15px;">
+            如题，坐标自立中学，本人初三生即将中考，目标高中就是旁边的青藤，之前和朋友说起五校联合运动会的事，我清楚地记得青藤中学体育部部长叫官俊臣，但我身边的两个同桌都说我记错了，我还有当时比赛的集体合照[图片.jpg]，有知情人可以解答吗？
+        </div>
+        <div class="post-actions" style="display: flex; gap: 15px; font-size: 14px;">
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>👍</span> 赞同(12)
+            </button>
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>💬</span> 回复(8)
+            </button>
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>⭐</span> 收藏(3)
+            </button>
+        </div>
+    </div>
+
+    <!-- 帖子模板2：分享类 -->
+    <div class="post-card" style="background: #181822; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #2a2a38;">
+        <div class="post-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="color: #0fa; font-size: 16px; font-weight: normal;">🔈🔈盘点青藤市五大都市传说！</h4>
+            <span style="font-size: 12px; color: #666;">2026-04-05 14:17</span>
+        </div>
+        <div class="post-content" style="color: #ccc; line-height: 1.8; margin-bottom: 15px; font-size: 15px;">
+            作为都市传说爱好者&ARG游戏主理人，本人在论坛上看到过好多青藤市的邪门事儿，这个帖子做个盘点，有兴趣的吧友可以进来看看哦^ ^
+        </div>
+        <div class="post-actions" style="display: flex; gap: 15px; font-size: 14px;">
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>👍</span> 赞同(27)
+            </button>
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>💬</span> 回复(15)
+            </button>
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>⭐</span> 收藏(89)
+            </button>
+        </div>
+    </div>
+
+    <!-- 帖子模板3：疑问类 -->
+    <div class="post-card" style="background: #181822; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #2a2a38;">
+        <div class="post-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="color: #0fa; font-size: 16px; font-weight: normal;">寻找图书馆搭子，有意向者私</h4>
+            <span style="font-size: 12px; color: #666;">2026-04-04 09:45</span>
+        </div>
+        <div class="post-content" style="color: #ccc; line-height: 1.8; margin-bottom: 15px; font-size: 15px;">
+            本人青藤中学高一在读即将升高二，在家里和宿舍学不下去，想找一个分科差不多的人一块儿去图书馆自习，有想去的可以在楼里回复我或者直接私信，期待一个有缘人♥♥
+        </div>
+        <div class="post-actions" style="display: flex; gap: 15px; font-size: 14px;">
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>👍</span> 赞同(34)
+            </button>
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>💬</span> 回复(21)
+            </button>
+            <span style="color: #666; margin-left: auto;">来自：众人皆醉我更是喝大了</span>
+        </div>
+    </div>
+
+    <!-- 帖子模板4：公告类 -->
+    <div class="post-card" style="background: #181822; border-radius: 12px; padding: 20px; margin-bottom: 30px; border: 1px solid #0fa;">
+        <div class="post-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="color: #ff3333; font-size: 16px; font-weight: normal;">【公告】青藤中学旧校区探险活动召集</h4>
+            <span style="font-size: 12px; color: #666;">2026-04-03 16:02</span>
+        </div>
+        <div class="post-content" style="color: #ccc; line-height: 1.8; margin-bottom: 15px; font-size: 15px;">
+            4月15日组织青藤中学旧校区实地探索，目标探寻都市传说真伪、解读墙面神秘符号。要求：携带录音设备、遵守安全规则、仅限已注册成员参与。报名请在评论区留言，附联系方式。
+        </div>
+        <div class="post-actions" style="display: flex; gap: 15px; font-size: 14px;">
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>✅</span> 报名(17)
+            </button>
+            <button style="background: transparent; border: none; color: #888; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                <span>💬</span> 留言(29)
+            </button>
+            <span style="color: #0fa; margin-left: auto; font-weight: bold;">官方发布</span>
+        </div>
+    </div>
+
+    <!-- 发帖输入框 -->
+    <div class="post-input" style="background: #15151f; border-radius: 12px; padding: 20px; border: 1px solid #333;">
+        <input type="text" placeholder="输入帖子标题…" style="width: 100%; padding: 12px; background: #181822; border: 1px solid #2a2a38; border-radius: 8px; color: #eee; font-size: 15px; margin-bottom: 12px; outline: none;">
+        <textarea placeholder="分享你的发现、疑问或组队信息…" style="width: 100%; height: 120px; padding: 12px; background: #181822; border: 1px solid #2a2a38; border-radius: 8px; color: #eee; font-size: 15px; resize: none; outline: none; line-height: 1.6;"></textarea>
+        <button style="margin-top: 15px; padding: 10px 24px; background: #0fa; color: #101015; border: none; border-radius: 8px; cursor: pointer; font-size: 15px; transition: 0.3s;">发布帖子</button>
+    </div>
+</div>
+
+<script>
+// 开关 + 状态文本 + 背景音乐（全修复，不报错）
+const check = document.getElementById('trigger');
+const content = document.querySelector('.content');
+const statusText = document.getElementById('status-text');
+const bgm = document.getElementById('bgm'); // 只定义一次
+
+check.addEventListener('change', function(){
+    if(this.checked) {
+        content.style.display = 'block';
+        statusText.style.display = 'block';
+        
+        // 播放音乐（防报错写法）
+        if(bgm) {
+            bgm.loop = true;
+            bgm.play().catch(err => {});
+        }
+    }
+});
+
+// 全屏黑客数据流
+const cav = document.getElementById('matrix');
+cav.width = window.innerWidth;
+cav.height = window.innerHeight;
+const ctx = cav.getContext('2d');
+const yPositions = Array(300).fill(0);
+
+function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0,0,cav.width,cav.height);
+    ctx.fillStyle = '#0fa';
+    ctx.font = '16px monospace';
+
+    yPositions.forEach((y, i) => {
+        const text = String.fromCharCode(100 + Math.random() * 300);
+        const x = i * 13;
+        ctx.fillText(text, x, y);
+        yPositions[i] = y > Math.random() * 10000 ? 0 : y + 18;
+    });
+}
+setInterval(draw, 35);
+
+// 点击展开文字
+const line1 = document.getElementById('line1');
+const line2 = document.getElementById('line2');
+line1.onclick = ()=>{
+    line2.style.display = 'block';
+};
+line2.onclick = ()=>{
+    alert('即将跳转到正文');
+};
+
+// 居中弹窗
+let poped = false;
+window.addEventListener('scroll', () => {
+    if (poped) return;
+    const rect = line1.getBoundingClientRect();
+    const ch = window.innerHeight / 2;
+    if (rect.top <= ch + 80 && rect.bottom >= ch - 80) {
+        poped = true;
+        const res = confirm('吓到你了吗？');
+        if (res) window.close();
+        else setTimeout(()=>alert('放心，我不会伤害一个人类。'),300);
+    }
+});
+
+// 人物卡片解锁
+window.addEventListener('load',()=>{
+    if(localStorage.getItem('read_chap1')){
+        document.getElementById('char1').innerHTML = '<div class="text">魏之<br>最古典朴素的形而上学</div>';
+    }
+    if(localStorage.getItem('read_chap3')){
+        document.getElementById('char2').innerHTML = '<div class="text">张南兮<br>最形而上学的唯物主义</div>';
+    }
+    if(localStorage.getItem('read_chap5')){
+        document.getElementById('char3').innerHTML = '<div class="text">王橹杰<br>前课桌主理意识体</div>';
+    }
+    if(localStorage.getItem('read_chap10')){
+        document.getElementById('char4').innerHTML = '<div class="text">官俊臣<br>出现又消失的人?</div>';
+    }
+    if(localStorage.getItem('read_chap10')){
+        document.getElementById('char5').innerHTML = '<div class="text">魏子宸<br>别“人”家的意识体</div>';
+    }
+    if(localStorage.getItem('read_chap16')){
+        document.getElementById('char6').innerHTML = '<div class="text">张奕然<br>深思熟虑的冲动产物</div>';
+    }
+});
+// 自动解锁已阅读的角色卡片
+window.addEventListener('load', function() {
+    // 如果看过第一章，解锁角色1
+    if (localStorage.getItem("read_char1")) {
+        document.getElementById("char1").innerHTML = `
+            <div class="text">魏之<br>最古典朴素的形而上学</div>
+        `;
+    }
+});
+</script>
+</body>
+</html>
